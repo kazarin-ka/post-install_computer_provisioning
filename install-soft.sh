@@ -1,6 +1,8 @@
 | #!/bin/bash
 USERNAME="XXXXXX"
 DWLD_FOLDER="/tmp"
+FULL_NAME="YYYYYY"
+EMAIL="aaaa@aaaaa.com"
 
 #=================================================
 #               DELETE PROGRAMS
@@ -266,5 +268,11 @@ systemctl disable apparmor
 #systemctl disable cups
 
 
+#=================================================
+#                   GIT CONFIG
+#=================================================
+# enable passwordless for our user
+su - $USERNAME -c 'git config --global user.name "$FULL_NAME"'
+su - $USERNAME -c "git config --global user.email $EMAIL"
 
 exit 0
