@@ -31,6 +31,9 @@ echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sou
 ## remmina
 apt-add-repository ppa:remmina-ppa-team/remmina-next -y
 
+## nvidia fresh drivers
+ add-apt-repository ppa:graphics-drivers/ppa -y
+
 ## keepass2 + plugins 
 apt-add-repository ppa:jtaylor/keepass -y
 add-apt-repository ppa:dlech/keepass2-plugins -y
