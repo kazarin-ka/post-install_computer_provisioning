@@ -1,7 +1,7 @@
 | #!/bin/bash
-USERNAME="XXXXXX"
+USERNAME="XXXXXX" # your name in system
 DWLD_FOLDER="/tmp"
-FULL_NAME="YYYYYY"
+FULL_NAME="YYYYYY" # rout full name if you use it. for example in Git
 EMAIL="aaaa@aaaaa.com"
 
 #=================================================
@@ -50,6 +50,10 @@ add-apt-repository ppa:ubuntu-desktop/ubuntu-make -y
 echo "deb http://repo.yandex.ru/yandex-disk/deb/ stable main" | sudo tee -a /etc/apt/sources.list.d/yandex.list > /dev/null && wget http://repo.yandex.ru/yandex-disk/YANDEX-DISK-KEY.GPG -O- | sudo apt-key add - 
 echo "deb [arch=amd64] http://repo.yandex.ru/yandex-browser/deb beta main" | sudo tee -a /etc/apt/sources.list.d/yandex.list > /dev/null && wget https://repo.yandex.ru/yandex-browser/YANDEX-BROWSER-KEY.GPG -O- | sudo apt-key add - 
 
+# if you want in install virtualbox 5.2. see below vitualbox section to find "5.2" version installation command
+#apt-get purge -y virtualbox*
+#sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian xenial contrib" >> /etc/apt/sources.list'
+#wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
 
 apt-get update
 
@@ -59,7 +63,7 @@ apt-get update
 apt-get install -y mc htop gparted gufw tmux vim dia xournal deluge filezilla zenmap wireshark tcpdump elinks zim docky sysv-rc-conf
 apt-get install -y p7zip p7zip-rar p7zip-full zip unzip
 #apt-get install -y lshw-gtk lshw
-apt-get install -y git minicom
+apt-get install -y minicom
 
 #=================================================
 #               DEV TOOLS
@@ -67,7 +71,7 @@ apt-get install -y git minicom
 
 ## sublime text
 apt-get install -y apt-transport-https
-apt-get install -y sublime-text
+apt-get install -y sublime-text git 
 
 ## mysql
 apt-get install -y mysql-workbench
@@ -230,6 +234,10 @@ apt-get install -y yandex-disk
 
 #virtual box + vagrnat + add vagrant boxes
 apt-get install -y virtualbox
+
+# if you want ot install virtualbox 5.2
+#apt-get install -y  virtualbox-5.2
+
 
 cd $DWLD_FOLDER
 MACHINE_TYPE=`uname -m`

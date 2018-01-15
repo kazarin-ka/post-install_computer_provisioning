@@ -12,4 +12,5 @@ For ease usage, editing and reading the script is divided into sections and anno
 **switch to root or use sudo!**
 
 chmod +x _scriptname_
+
 ./_scriptname_
