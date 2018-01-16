@@ -3,6 +3,7 @@ USERNAME="XXXXXX" # your name in system
 DWLD_FOLDER="/tmp"
 FULL_NAME="YYYYYY" # rout full name if you use it. for example in Git
 EMAIL="aaaa@aaaaa.com"
+VPN_SERVER_URL="https://aaa.bbb.com/auth-provider" # url to ssl vpn server
 
 #=================================================
 #               DELETE PROGRAMS
@@ -135,6 +136,69 @@ apt-get install -y keepassx
 #rm KeePass-2.30-Russian.zip
 #cd /home/akella
 
+#=================================================
+#               VPN SOFTWARE
+#=================================================
+
+apt-get install -y openconnect
+cd $DWLD_FOLDER
+wget http://git.infradead.org/users/dwmw2/vpnc-scripts.git/blob_plain/HEAD:/vpnc-script
+mkdir /etc/vpnc
+cp vpnc-script /etc/vpnc
+chmod 755 /etc/vpnc/vpnc-script
+
+echo alias work_vpn='"'"sudo LD_LIBRARY_PATH=/usr/local/lib openconnect --juniper --no-cert-check $VPN_SERVER_URL"'"' >> /home/$USERNAME/.bashrc
+
+#=================================================
+#               BYOD Security policy
+#=================================================
+# Disable mac randomization
+touch /etc/NetworkManager/conf.d/90-disable-randomization.conf
+
+cat <<EOF > /etc/NetworkManager/conf.d/90-disable-randomization.conf
+[device-mac-randomization]
+wifi.scan-rand-mac-address=no
+ 
+[connection-mac-randomization]
+ethernet.cloned-mac-address=permanent
+wifi.cloned-mac-address=permanent
+EOF
+
+# Send hardware address to DHCP
+echo "dhcp-client-identifier = hardware;" >> /etc/dhcp/dhclient.conf 
+
+# Screen lock
+gsettings set org.gnome.desktop.session idle-delay 300
+gsettings set org.gnome.desktop.screensaver lock-delay 0
+
+# Password complexity
+apt-get install -y libpam-cracklib
+sed -i 's/@include common-password/#@include common-password/' /etc/pam.d/passwd
+
+#The following parameters help to enforce this policy: 
+#    prompt 3 times for password in case of an error
+#    8 characters minimum length (minlen option)
+#    at least 2 characters should be different from old password when entering a new one (difok option)
+#    at least 1 digit (dcredit option)
+#    at least 1 uppercase (ucredit option)
+#    at least 1 other character (ocredit option)
+#    at least 1 lowercase (lcredit option)
+
+
+cat <<EOF >> /etc/pam.d/passwd
+#%PAM-1.0
+password    required    pam_cracklib.so difok=2 minlen=8 dcredit=1 ucredit=1 ocredit=1 lcredit=1 retry=3
+password    required    pam_unix.so sha512 shadow remember=5 use_authtok
+#password   required    pam_unix.so sha512 shadow nullok
+EOF
+
+
+touch /etc/security/opasswd
+chown root:root /etc/security/opasswd
+chmod 600 /etc/security/opasswd
+
+# Password age
+sudo chage -I -1 -m 0 -M 60 $USERNAME
 
 #=================================================
 #               WEB BROWSERS
@@ -147,7 +211,7 @@ apt-get install -y chromium-browser chromium-browser-l10n
 #apt-get install -y firefox firefox-locale-ru
 
 # yandex bowser
-apt-get install -y yandex-browser-beta
+#apt-get install -y yandex-browser-beta
 # plugins ????
 
 
@@ -285,5 +349,8 @@ systemctl disable apparmor
 # enable passwordless for our user
 su - $USERNAME -c 'git config --global user.name "$FULL_NAME"'
 su - $USERNAME -c "git config --global user.email $EMAIL"
+
+
+reboot
 
 exit 0
