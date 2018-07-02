@@ -1,4 +1,5 @@
-| #!/bin/bash
+## TODO : add Idempotency
+#!/bin/bash
 USERNAME="XXXXXX" # your name in system
 DWLD_FOLDER="/tmp"
 FULL_NAME="YYYYYY" # rout full name if you use it. for example in Git
